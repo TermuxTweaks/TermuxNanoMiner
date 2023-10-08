@@ -14,4 +14,3 @@ mkdir build
 cd build
 cmake -DWITH_HWLOC=OFF ..
 make
-
