@@ -35,6 +35,7 @@ if [ "$choice" == "1" ]; then
 elif [ "$choice" == "2" ]; then
     # Download Xmrig for Linux
     wget https://github.com/xmrig/xmrig/releases/download/v6.20.0/xmrig-6.20.0-linux-x64.tar.gz
+    cd Downloads
 
     # Unzip and untar the downloaded file
     tar -xzf xmrig-6.20.0-linux-x64.tar.gz
