@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Download Xmrig for Linux
+wget https://github.com/xmrig/xmrig/releases/download/v6.20.0/xmrig-6.20.0-linux-x64.tar.gz
+
+# Unzip and untar the downloaded file
+tar -xzf xmrig-6.20.0-linux-x64.tar.gz
+
+# Enter the Xmrig directory
+cd xmrig-6.20.0
+
 echo "Please choose a cryptocurrency: Bitcoin (B), Dogecoin (D), or Nano (N)."
 read -r choice
 
@@ -19,7 +28,4 @@ case $choice in
     ;;
 esac
 
-sudo apt update && sudo apt install git -y && git clone https://github.com/ShadyTrapShit/lazyminer && cd lazyminer && bash lazyminer.sh && cd xmrig-6.20.0 && $final_command
-
-
-
+$final_command
