@@ -59,11 +59,15 @@ else
     cd xmrig/build || exit
 fi
 
+# Ensuring we're in the right directory to execute xmrig
+xmrig_path=$(pwd)
+
 # Function to prompt for wallet address
 prompt_for_address() {
     echo "Please enter your wallet address for $1 (e.g., $2):"
     read -r wallet_address
-    echo "$1_address=$wallet_address" >> ../$wallet_file
+    # Change to storing the address with crypto key in the wallet file
+    echo "${1}_address=$wallet_address" >> "../../$wallet_file"
 }
 
 # Function to choose cryptocurrency
@@ -92,23 +96,15 @@ else
 fi
 
 # Check for saved wallet addresses
-if [ -f "../$wallet_file" ]; then
+if [ -f "../../$wallet_file" ]; then
     echo "Do you want to use the saved wallet addresses? (y/n)"
     read -r use_saved
     if [ "$use_saved" = "y" ]; then
-        source ../$wallet_file
+        source "../../$wallet_file"
     else
-        rm ../$wallet_file
+        rm "../../$wallet_file"
+        prompt_for_address $crypto $example_address
     fi
-fi
-
-# Prompt for wallet address if not saved
-if [ -z "${crypto}_address" ]; then
-    prompt_for_address $crypto $example_address
-fi
-
-# Construct and run the final command
-final_command="./xmrig -o pool.example.com:3333 -u ${crypto}:${crypto}_address.worker -p x"
-echo "Starting mining with the following command:"
-echo $final_command
-eval $final_command
+else
+    # Prompt for wallet address if not saved or declined to use saved
+    prompt_for_address $crypto $example
