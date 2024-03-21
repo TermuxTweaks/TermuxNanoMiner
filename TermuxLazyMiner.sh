@@ -1,31 +1,7 @@
 #!/bin/bash
-# Enhanced Crypto Mining Setup Script
-# This script helps set up and start mining cryptocurrencies using XMRig.
-# It supports multiple cryptocurrencies and uses both a config file and command-line arguments.
-#
-# Usage:
-# Run without arguments for an interactive setup: ./this_script.sh
-# Or, specify a crypto choice directly: ./this_script.sh -c BTC
-#
-# Supported cryptocurrencies: Bitcoin (BTC), Dogecoin (DOGE), Nano (NANO)
-# Prerequisites: cmake, git
 
 # Define file to store previous wallet addresses
 wallet_file="wallet_addresses.txt"
-
-# Function to display usage
-usage() {
-    echo "Usage: $0 [-c <BTC|DOGE|NANO>]"
-    exit 1
-}
-
-# Parse command-line arguments
-while getopts ":c:" opt; do
-  case ${opt} in
-    c ) crypto_choice=${OPTARG^^};;
-    * ) usage;;
-  esac
-done
 
 # Update packages
 echo "Updating packages..."
@@ -62,49 +38,44 @@ fi
 # Ensuring we're in the right directory to execute xmrig
 xmrig_path=$(pwd)
 
-# Function to prompt for wallet address
-prompt_for_address() {
-    echo "Please enter your wallet address for $1 (e.g., $2):"
-    read -r wallet_address
-    # Change to storing the address with crypto key in the wallet file
-    echo "${1}_address=$wallet_address" >> "../../$wallet_file"
-}
-
-# Function to choose cryptocurrency
-choose_crypto() {
+# Function to prompt for cryptocurrency and wallet address
+prompt_for_details() {
     echo "Please choose a cryptocurrency: Bitcoin (B), Dogecoin (D), or Nano (N)."
     read -r choice
     case $choice in
-      B|b) crypto="BTC"; example_address="bc1q..." ;;
-      D|d) crypto="DOGE"; example_address="D6Q..." ;;
-      N|n) crypto="NANO"; example_address="nano_3uix..." ;;
-      *) echo "Invalid choice, exiting."; exit 1 ;;
+        B|b) 
+            crypto="BTC"
+            tag=".unmineable_worker_orbbwutd"
+            example_address="bc1q..."
+            ;;
+        D|d) 
+            crypto="DOGE"
+            tag=".unmineable_worker_khirdmkp"
+            example_address="D6Q..."
+            ;;
+        N|n) 
+            crypto="XNO"
+            tag=".unmineable_worker_nkdrzce"
+            example_address="nano_3uix..."
+            ;;
+        *) echo "Invalid choice, exiting."; exit 1;;
     esac
+    echo "Please enter your wallet address for $crypto (e.g., $example_address):"
+    read -r wallet_address
+    echo "${crypto}_address=$wallet_address" >> "$wallet_file"
+    # Set final command based on cryptocurrency
+    final_command="./xmrig -a rx -o stratum+ssl://rx.unmineable.com:443 -u $crypto:$wallet_address$tag -p x"
 }
 
-# If no command-line argument, interactively choose cryptocurrency
-if [ -z "$crypto_choice" ]; then
-    choose_crypto
-else
-    crypto=$crypto_choice
-    case $crypto in
-      BTC) example_address="bc1q..." ;;
-      DOGE) example_address="D6Q..." ;;
-      NANO) example_address="nano_3uix..." ;;
-      *) echo "Invalid cryptocurrency choice provided."; exit 1 ;;
-    esac
+prompt_for_details
+
+# Check if final_command is set, meaning we have prompted for details
+if [ -z "$final_command" ]; then
+    echo "No mining details provided. Exiting."
+    exit 1
 fi
 
-# Check for saved wallet addresses
-if [ -f "../../$wallet_file" ]; then
-    echo "Do you want to use the saved wallet addresses? (y/n)"
-    read -r use_saved
-    if [ "$use_saved" = "y" ]; then
-        source "../../$wallet_file"
-    else
-        rm "../../$wallet_file"
-        prompt_for_address $crypto $example_address
-    fi
-else
-    # Prompt for wallet address if not saved or declined to use saved
-    prompt_for_address $crypto $example
+# Execute the mining command
+echo "Starting mining with the following command:"
+echo $final_command
+(cd $xmrig_path && eval $final_command)
