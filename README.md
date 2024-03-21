@@ -27,6 +27,9 @@ Before you dive into using TermuxLazyMiner, ensure you have the following instal
 
 Follow the on-screen prompts to complete the setup and start mining your favorite cryptocurrency.
 
+For a single command to install and run the script:
+       git clone https://github.com/ShadyTrapShit/TermuxLazyMiner.git && cd TermuxLazyMiner && chmod +x TermuxLazyMiner.sh && bash TermuxLazyMiner.sh
+
 ## Usage
 
 To start mining with TermuxLazyMiner, simply run the script and follow the interactive prompts. The script supports various cryptocurrencies and allows for detailed configuration to maximize your mining efficiency.
