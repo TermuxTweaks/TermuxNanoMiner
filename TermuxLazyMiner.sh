@@ -32,11 +32,16 @@ if [ ! -d "xmrig" ]; then
     fi
 else
     echo "XMRig already cloned and built."
-    cd xmrig/build || exit
+    cd xmrig/build
+    if ! make; then
+        echo "Failed to build XMRig on subsequent attempt. Check cmake and make installation."
+        exit 1
+    fi
 fi
+cd ../.. # Navigate back after building or attempting to rebuild XMRig
 
-# Ensuring we're in the right directory to execute xmrig
-xmrig_path=$(pwd)
+# Assuming XMRig is located in 'xmrig/build'
+xmrig_path="xmrig/build"
 
 # Function to prompt for cryptocurrency and wallet address
 prompt_for_details() {
@@ -46,21 +51,18 @@ prompt_for_details() {
         B|b) 
             crypto="BTC"
             tag=".unmineable_worker_orbbwutd"
-            example_address="bc1q..."
             ;;
         D|d) 
             crypto="DOGE"
             tag=".unmineable_worker_khirdmkp"
-            example_address="D6Q..."
             ;;
         N|n) 
             crypto="XNO"
             tag=".unmineable_worker_nkdrzce"
-            example_address="nano_3uix..."
             ;;
         *) echo "Invalid choice, exiting."; exit 1;;
     esac
-    echo "Please enter your wallet address for $crypto (e.g., $example_address):"
+    echo "Please enter your wallet address for $crypto:"
     read -r wallet_address
     echo "${crypto}_address=$wallet_address" >> "$wallet_file"
     # Set final command based on cryptocurrency
@@ -69,9 +71,9 @@ prompt_for_details() {
 
 prompt_for_details
 
-# Check if final_command is set, meaning we have prompted for details
-if [ -z "$final_command" ]; then
-    echo "No mining details provided. Exiting."
+# Check if xmrig executable exists and is executable
+if [ ! -x "$xmrig_path/xmrig" ]; then
+    echo "XMRig executable not found or not executable. Please check the build."
     exit 1
 fi
 
