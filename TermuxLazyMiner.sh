@@ -40,8 +40,8 @@ else
 fi
 cd ../.. # Navigate back after building or attempting to rebuild XMRig
 
-# Assuming XMRig is located in 'xmrig/build'
-xmrig_path="xmrig/build"
+# Assuming XMRig is located in 'TermuxLazyMiner/xmrig/build'
+xmrig_path="TermuxLazyMiner/xmrig/build"
 
 # Function to prompt for cryptocurrency and wallet address
 prompt_for_details() {
