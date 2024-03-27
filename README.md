@@ -1,6 +1,6 @@
 # TermuxNanoMiner
 
-Welcome to the TermuxLazyMiner project! This script, designed for use within Termux, automates the setup and launch of Nano mining using XMRig inside of Termux. With a focus on simplicity and usability, TermuxNanoMiner is the perfect tool for beginners to get started with mobile mining.
+Welcome to the TermuxNanoMiner project! This script, designed for use within Termux, automates the setup and launch of Nano mining using XMRig inside of Termux. With a focus on simplicity and usability, TermuxNanoMiner is the perfect tool for beginners to get started with mobile mining.
 
 ## Getting Started
 
