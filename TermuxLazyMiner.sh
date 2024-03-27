@@ -18,7 +18,9 @@ if ! pkg install -y cmake git; then
 fi
 
 # Clone the repository and build the project if not already done
-if [ ! -d "xmrig" ]; then
+if [ ! -d "TermuxLazyMiner/xmrig" ]; then
+    mkdir -p TermuxLazyMiner
+    cd TermuxLazyMiner || exit
     echo "Cloning and building XMRig..."
     if ! git clone https://github.com/xmrig/xmrig.git; then
         echo "Failed to clone XMRig. Check your internet connection."
@@ -30,18 +32,17 @@ if [ ! -d "xmrig" ]; then
         echo "Failed to build XMRig. Check cmake and make installation."
         exit 1
     fi
+    cd ../../.. # Navigate back to the script's starting directory
 else
     echo "XMRig already cloned and built."
-    cd xmrig/build
-    if ! make; then
+    if ! make -C TermuxLazyMiner/xmrig/build; then
         echo "Failed to build XMRig on subsequent attempt. Check cmake and make installation."
         exit 1
     fi
 fi
-cd ../.. # Navigate back after building or attempting to rebuild XMRig
 
-# Assuming XMRig is located in 'TermuxLazyMiner/xmrig/build'
-xmrig_path="TermuxLazyMiner/xmrig/build"
+# Set the correct path for XMRig executable
+xmrig_path="./TermuxLazyMiner/xmrig/build"
 
 # Function to prompt for cryptocurrency and wallet address
 prompt_for_details() {
